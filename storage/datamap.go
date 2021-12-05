@@ -1,6 +1,9 @@
 package storage
 
-import "sync"
+import (
+	"errors"
+	"sync"
+)
 
 type User struct {
 	PID   string `json:"pid"`
@@ -24,10 +27,14 @@ func GetInstance() *UserDataMap {
 	return &userDataMap
 }
 
-func (u *UserDataMap) Set(user *User) {
+func (u *UserDataMap) Set(user *User) error {
 	u.mu.Lock()
 	defer u.mu.Unlock()
+	if _, exist := u.dataMap[user.Email]; exist {
+		return errors.New("already exist")
+	}
 	u.dataMap[user.Email] = user
+	return nil
 }
 
 func (u *UserDataMap) GetByEmail(email string) User {
@@ -37,4 +44,8 @@ func (u *UserDataMap) GetByEmail(email string) User {
 		PID:   u.dataMap[email].PID,
 		Email: u.dataMap[email].Email,
 	}
+}
+
+func (u *UserDataMap) DeleteByEmail(email string) {
+
 }

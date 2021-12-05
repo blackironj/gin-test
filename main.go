@@ -23,7 +23,10 @@ func main() {
 			return
 		}
 		req.PID = util.UUIDv4()
-		storage.GetInstance().Set(&req)
+		if err := storage.GetInstance().Set(&req); err != nil {
+			c.JSON(http.StatusConflict, gin.H{})
+			return
+		}
 
 		c.JSON(http.StatusOK, gin.H{
 			"pid": req.PID,
