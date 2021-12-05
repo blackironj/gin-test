@@ -47,5 +47,7 @@ func (u *UserDataMap) GetByEmail(email string) User {
 }
 
 func (u *UserDataMap) DeleteByEmail(email string) {
-
+	u.mu.Lock()
+	defer u.mu.Unlock()
+	delete(u.dataMap, email)
 }

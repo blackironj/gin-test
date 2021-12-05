@@ -38,5 +38,10 @@ func main() {
 		c.JSON(http.StatusOK, &user)
 	})
 
+	r.DELETE("/user/:email", func(c *gin.Context) {
+		storage.GetInstance().DeleteByEmail(c.Param("email"))
+		c.JSON(http.StatusOK, gin.H{})
+	})
+
 	r.Run(":8080")
 }
