@@ -16,7 +16,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.POST("/create/user", func(c *gin.Context) {
+	r.POST("/user", func(c *gin.Context) {
 		var req storage.User
 		if err := c.BindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
@@ -30,7 +30,7 @@ func main() {
 		})
 	})
 
-	r.GET("/get/user/:email", func(c *gin.Context) {
+	r.GET("/user/:email", func(c *gin.Context) {
 		user := storage.GetInstance().GetByEmail(c.Param("email"))
 		c.JSON(http.StatusOK, &user)
 	})
