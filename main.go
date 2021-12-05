@@ -35,6 +35,10 @@ func main() {
 
 	r.GET("/user/:email", func(c *gin.Context) {
 		user := storage.GetInstance().GetByEmail(c.Param("email"))
+		if user.PID == "" {
+			c.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
 		c.JSON(http.StatusOK, &user)
 	})
 
