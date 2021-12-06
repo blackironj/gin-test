@@ -40,9 +40,15 @@ func (u *UserDataMap) Set(user *User) error {
 func (u *UserDataMap) GetByEmail(email string) User {
 	u.mu.RLock()
 	defer u.mu.RUnlock()
+
+	user, exist := u.dataMap[email]
+	if !exist {
+		return User{}
+	}
+
 	return User{
-		PID:   u.dataMap[email].PID,
-		Email: u.dataMap[email].Email,
+		PID:   user.PID,
+		Email: user.Email,
 	}
 }
 
