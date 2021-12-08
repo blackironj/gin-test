@@ -23,6 +23,8 @@ func main() {
 			return
 		}
 		req.PID = util.UUIDv4()
+		log.Printf("[create user] new user email : %s", req.Email)
+		log.Printf("[create user] generated pid : %s", req.PID)
 		if err := storage.GetInstance().Set(&req); err != nil {
 			c.JSON(http.StatusConflict, gin.H{})
 			return
@@ -43,6 +45,7 @@ func main() {
 	})
 
 	r.DELETE("/user/:email", func(c *gin.Context) {
+		log.Printf("[get user] user email : %s", c.Param("email"))
 		storage.GetInstance().DeleteByEmail(c.Param("email"))
 		c.JSON(http.StatusOK, gin.H{})
 	})
