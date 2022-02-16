@@ -1,0 +1,29 @@
+name: Close issue
+
+on:
+  pull_request:
+    branches-ignore:
+      - master
+
+jobs:
+  close-issue:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const prBody = context.payload.pull_request.body
+            const issues = prBody.match(/(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)((?:[\s]+#[\d]+)(?:[\s,]+#[\d]+)*(?:[\n\r\s,]|$))/g)
+            
+            for (let i = 0; i < issues.length; i++) {
+              const val = issues[i].split(' #')
+              const issueNum = parseInt(val[1])
+
+              await github.rest.issues.update({
+                issue_number: issueNum,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              })
+            }
